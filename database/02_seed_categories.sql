@@ -1,5 +1,4 @@
--- Uruchom po 01_schema.sql jako HELPDESK, przez F5.
--- MERGE dodaje tylko brakujace kategorie: skrypt mozna powtorzyc.
+
 
 MERGE INTO helpdesk.categories target
 USING (

@@ -1,6 +1,3 @@
--- HelpDesk: poczatkowy schemat Oracle Database.
--- Uruchom raz w pustym schemacie HELPDESK, w SQL Developer przez F5.
--- Obiekty maja jawnie wskazanego wlasciciela HELPDESK.
 
 CREATE TABLE helpdesk.users (
     id NUMBER GENERATED ALWAYS AS IDENTITY,
