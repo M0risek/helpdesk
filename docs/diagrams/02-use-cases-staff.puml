@@ -1,0 +1,42 @@
+@startuml
+!pragma layout smetana
+left to right direction
+skinparam defaultFontName Segoe UI
+skinparam defaultFontSize 14
+skinparam shadowing false
+skinparam backgroundColor white
+skinparam usecaseBackgroundColor #EFF5ED
+skinparam usecaseBorderColor #315642
+title HelpDesk — pracownik i operator
+actor "Pracownik\nSTAFF" as Staff
+actor "Operator\ntechniczny" as Operator
+rectangle "Interfejs webowy HelpDesk" {
+  usecase "UC-03\nProfil i wylogowanie" as Profile
+  usecase "UC-04\nPrzeglądaj kategorie" as Categories
+  usecase "UC-06\nPrzeglądaj i filtruj\ncałą kolejkę" as List
+  usecase "UC-06\nOdczytaj szczegóły" as Detail
+  usecase "UC-09\nPrzypisz pracownika /\nrozpocznij obsługę" as Start
+  usecase "UC-10\nZakończ obsługę" as Close
+  usecase "UC-11\nOdczytaj podsumowanie" as Summary
+}
+rectangle "Narzędzie administracyjne CLI" {
+  usecase "UC-12\nUtwórz konto pracownika" as CreateStaff
+}
+Staff -- Profile
+Staff -- Categories
+Staff -- List
+Staff -- Detail
+Staff -- Start
+Staff -- Close
+Staff -- Summary
+Operator -- CreateStaff
+legend bottom
+  NEW → IN_PROGRESS → CLOSED
+  Obsługa wymaga przypisania STAFF.
+  Pracownik nie zmienia treści klienta.
+endlegend
+note bottom of Operator
+  Operator nie jest rolą konta webowego.
+  Logowanie obu ról: UC-02 jako gość.
+end note
+@enduml

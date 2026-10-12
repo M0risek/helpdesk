@@ -1,0 +1,40 @@
+@startuml
+!pragma layout smetana
+left to right direction
+skinparam defaultFontName Segoe UI
+skinparam defaultFontSize 14
+skinparam shadowing false
+skinparam backgroundColor white
+skinparam usecaseBackgroundColor #EFF5ED
+skinparam usecaseBorderColor #315642
+title HelpDesk — gość i klient
+actor Gość as Guest
+actor "Klient\nCLIENT" as Client
+rectangle "Aplikacja webowa HelpDesk" {
+  usecase "UC-01\nZarejestruj klienta" as Register
+  usecase "UC-02\nZaloguj się" as Login
+  usecase "UC-03\nOdczytaj profil" as Profile
+  usecase "UC-03\nWyloguj się" as Logout
+  usecase "UC-04\nPrzeglądaj kategorie" as Categories
+  usecase "UC-05\nDodaj zgłoszenie" as Create
+  usecase "UC-06\nPrzeglądaj i filtruj\nwłasne zgłoszenia" as List
+  usecase "UC-06\nOdczytaj szczegóły\nwłasnego zgłoszenia" as Detail
+  usecase "UC-07\nZmień treść własnego NEW" as Edit
+  usecase "UC-08\nUsuń własne NEW" as Delete
+}
+Guest -- Register
+Guest -- Login
+Guest -- Categories : publiczne API
+Client -- Profile
+Client -- Logout
+Client -- Categories
+Client -- Create
+Client -- List
+Client -- Detail
+Client -- Edit
+Client -- Delete
+note bottom of Client
+  Czynności klienta wymagają aktywnej sesji.
+  Edycja i usunięcie: tylko własne NEW.
+end note
+@enduml

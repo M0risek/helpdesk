@@ -1,0 +1,48 @@
+@startuml
+skinparam defaultFontName Segoe UI
+skinparam defaultFontSize 14
+skinparam shadowing false
+skinparam backgroundColor white
+skinparam ParticipantBackgroundColor #EFF5ED
+skinparam ParticipantBorderColor #315642
+title UC-09/10 — zapis obsługi przez pracownika
+actor "Pracownik STAFF" as Staff
+participant "React\nTickets / api.js" as UI
+participant "Express\ntickets / reguły / repozytorium" as API
+database Oracle as DB
+note over Staff, UI
+  Aktywna sesja. Szczegóły i revision już odczytane.
+end note
+Staff -> UI : Wybierz przypisanie/status, zapisz
+UI -> API : PATCH /api/tickets/:id\nassignedTo, status, revision + cookie/CSRF
+API -> DB : Odczytaj sesję i aktualne konto
+DB --> API : Sesja i rola STAFF
+API -> API : CSRF, rola, walidacja pól
+group Jedno połączenie, jedna transakcja
+  API -> DB : SELECT zgłoszenia FOR UPDATE WAIT 3
+  DB --> API : Zablokowany rekord
+  API -> API : Sprawdź revision i aktualny stan
+  opt Wersja aktualna i zgłoszenie nie jest zamknięte
+    API -> DB : Sprawdź rolę wskazanego pracownika
+    DB --> API : Wynik odczytu konta
+    API -> API : Sprawdź NEW → IN_PROGRESS → CLOSED
+  end
+  alt Wszystkie sprawdzenia poprawne
+    API -> DB : UPDATE przypisania, statusu i updated_at
+    API -> DB : Odczytaj nowy rekord
+    DB --> API : Rekord z nową revision
+    API -> DB : COMMIT
+    API --> UI : 200 + aktualne zgłoszenie
+    UI --> Staff : Potwierdzenie zapisu
+  else Stara wersja / zamknięte / błędna zmiana
+    API -> DB : ROLLBACK
+    API --> UI : 409 (konflikt/stany) lub 400 (dane)
+    UI --> Staff : Komunikat, szkic zachowany
+  end
+end
+note over API, DB
+  Niedostępny rekord: 404; timeout blokady: 409.
+  Błąd Oracle: rollback i ogólny błąd 503.
+  Nie ma nadpisania zapisu tej samej wersji.
+end note
+@enduml

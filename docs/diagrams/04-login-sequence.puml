@@ -1,0 +1,43 @@
+@startuml
+skinparam defaultFontName Segoe UI
+skinparam defaultFontSize 14
+skinparam shadowing false
+skinparam backgroundColor white
+skinparam ParticipantBackgroundColor #EFF5ED
+skinparam ParticipantBorderColor #315642
+title UC-02 — logowanie i trwała sesja
+actor Użytkownik as User
+participant "React\nAuthForm / api.js" as UI
+participant "Express\nauth / session" as API
+database "Oracle\nUSERS / AUTH_SESSIONS" as DB
+User -> UI : Wpisz e-mail i hasło
+UI -> API : GET /api/auth/csrf
+API -> DB : Utwórz/odczytaj sesję anonimową
+DB --> API : Dane sesji
+API --> UI : Token CSRF i cookie sesji
+UI -> API : POST /api/auth/login\nJSON + cookie + X-CSRF-Token
+API -> API : Walidacja, CSRF i limit prób
+API -> DB : SELECT konta po e-mailu (bind)
+DB --> API : Konto z hashem lub brak
+API -> API : Weryfikacja hasła scrypt
+alt Dane poprawne
+  API -> API : Regeneruj ID sesji i token CSRF
+  API -> DB : Unieważnij starą / zapisz nową sesję
+  alt Sesja zapisana
+    DB --> API : Sukces
+    API --> UI : 200 + profil + CSRF + nowe cookie
+    UI --> User : Panel zgodny z rolą
+  else Awaria magazynu sesji
+    DB --> API : Błąd
+    API --> UI : Błąd 503, bez szczegółów Oracle
+    UI --> User : Komunikat i możliwość ponowienia
+  end
+else Błędne hasło lub nieznany e-mail
+  API --> UI : 401, wspólny komunikat
+  UI --> User : Formularz z błędem
+end
+note over API
+  403 dla CSRF, 429 dla limitu, 400 dla pól.
+  Ścieżki te kończą żądanie przed odczytem konta.
+end note
+@enduml

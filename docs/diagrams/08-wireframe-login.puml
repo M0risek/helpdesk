@@ -1,0 +1,20 @@
+@startsalt
+skinparam defaultFontName Segoe UI
+skinparam defaultFontSize 16
+scale 1.5
+{
+  {+
+    <b>HelpDesk — obsługa serwisu
+    Zgłoś problem i sprawdź postęp
+    ==
+    {/ <b>Logowanie | Utwórz konto }
+    { E-mail | "jan@example.test             "
+      Hasło | "************                 " }
+    [ Zaloguj się ]
+    ..
+    Miejsce na komunikat błędu
+    --
+    <i>Makieta struktury, nie zrzut aplikacji
+  }
+}
+@endsalt

@@ -22,7 +22,9 @@ Backend Express obsługuje połączenie z Oracle, odczyt kategorii, rejestrację
 
 Frontend React zawiera formularze rejestracji i logowania, pulpity klienta i pracownika, wyszukiwanie kategorii wsparcia oraz widok konta. W APP-04 dodano tworzenie, listę, szczegóły, edycję i usuwanie własnych nowych zgłoszeń, a dla pracownika przypisanie i statusy. Lista ma filtry i paginację. Dane pochodzą z API i Oracle; sesja jest odtwarzana po odświeżeniu strony.
 
-Klient może zmieniać zgłoszenie do rozpoczęcia obsługi. Pracownik prowadzi je kolejno przez statusy „Nowe”, „W trakcie” i „Zamknięte”. Zapis sprawdza aktualną wersję zgłoszenia. Następne prace to ręczny odbiór aplikacji, dokumentacja projektu (wymagania, UML, plan zespołu) i przygotowanie wdrożenia.
+Klient może zmieniać zgłoszenie do rozpoczęcia obsługi. Pracownik prowadzi je kolejno przez statusy „Nowe”, „W trakcie” i „Zamknięte”. Zapis sprawdza aktualną wersję zgłoszenia.
+
+W DOC-01 dodano SRS, przypadki użycia, UML, architekturę, ERD, makiety, plan zespołu umownego ze studentem jako liderem i harmonogram 9 zjazdów. Dokumenty są przygotowane do przeglądu. Kolejne prace to ręczny odbiór obu ról, uzupełnienie instrukcji użytkownika i specyfikacji API, testy wydajności oraz wdrożenie/CI/CD.
 
 ## Uruchomienie na komputerze projektu
 
@@ -61,9 +63,18 @@ npm.cmd run build
 
 Frontend: 20 testów komponentów i komunikacji API. Backend: 29 testów uwierzytelniania, reguł i API. Test integracyjny uruchamia własne serwery na wolnych portach i sprawdza przepływ frontend → backend → Oracle, w tym CRUD, uprawnienia, filtry i równoczesny zapis; tworzy i usuwa wyłącznie własne zgłoszenia, konta oraz sesje testowe.
 
-Testy komponentów korzystają z DOM w jsdom. Test integracyjny działa przez HTTP. W tej sesji nie było dostępnego narzędzia sterowania przeglądarką, dlatego wygląd na komputerze i telefonie wymaga jeszcze ręcznej kontroli w przeglądarce.
+Testy komponentów korzystają z DOM w jsdom. Test integracyjny działa przez HTTP. Wygląd na komputerze i telefonie wymaga jeszcze ręcznej kontroli w przeglądarce, zgodnie z protokołem odbioru.
 
 ## Uruchomienie i dokumentacja
+
+- [Indeks pełnej dokumentacji i stan etapów](docs/README.md)
+- [SRS — wymagania projektu](docs/requirements.md)
+- [Plan zespołu i harmonogram zjazdów](docs/project-plan.md)
+- [UML i scenariusze użytkowników](docs/use-cases.md)
+- [Architektura i ERD](docs/architecture.md)
+- [Makiety interfejsu](docs/wireframes.md)
+- [Macierz testów i odbiór ręczny](docs/acceptance.md)
+- [Aktualizacja obecnych kart Trello i commit DOC-01](docs/trello.md)
 - [Baza danych i skrypty SQL](database/README.md)
 - [Backend: konfiguracja, uruchomienie i API](backend/README.md)
 - [Logowanie: wymagania, API, role i testy](docs/authentication.md)

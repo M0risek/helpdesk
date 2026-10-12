@@ -1,0 +1,29 @@
+@startsalt
+skinparam defaultFontName Segoe UI
+skinparam defaultFontSize 16
+scale 1.5
+{+
+  <b>HelpDesk · Klient
+  { [ Pulpit ] | [ Zgłoszenia ]
+    [ Kategorie ] | [ Moje konto ] }
+  [ Wyloguj ]
+  ==
+  <b>Nowe zgłoszenie
+  Tytuł
+  "Laptop nie uruchamia się   "
+  Kategoria
+  ^Laptop^
+  Opis problemu
+  {+
+    Po podłączeniu zasilacza
+    ekran pozostaje czarny.
+    .
+    "                             "
+  }
+  Miejsce na błędy pól / API
+  [ Wyślij zgłoszenie ]
+  [ Wróć do listy ]
+  --
+  <i>Makieta mobilna, nie test telefonu
+}
+@endsalt

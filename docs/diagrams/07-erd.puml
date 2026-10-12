@@ -1,0 +1,61 @@
+@startuml
+!pragma layout smetana
+skinparam defaultFontName Segoe UI
+skinparam defaultFontSize 14
+skinparam shadowing false
+skinparam backgroundColor white
+skinparam classAttributeIconSize 0
+skinparam classBackgroundColor #EFF5ED
+skinparam classBorderColor #315642
+skinparam nodesep 60
+skinparam ranksep 60
+title Oracle HELPDESK — fizyczny ERD
+entity USERS {
+  * id : NUMBER <<PK, identity>>
+  --
+  * full_name : VARCHAR2(120 CHAR)
+  * email : VARCHAR2(254 CHAR) <<UQ>>
+  * password_hash : VARCHAR2(255 CHAR)
+  * user_role : VARCHAR2(10 CHAR)
+  * created_at : TIMESTAMP WITH TIME ZONE
+}
+entity CATEGORIES {
+  * id : NUMBER <<PK, identity>>
+  --
+  * name : VARCHAR2(80 CHAR) <<UQ>>
+  description : VARCHAR2(400 CHAR)
+}
+entity TICKETS {
+  * id : NUMBER <<PK, identity>>
+  --
+  * title : VARCHAR2(200 CHAR)
+  * description : CLOB
+  * category_id : NUMBER <<FK>>
+  * client_id : NUMBER <<FK>>
+  assigned_to : NUMBER <<FK>>
+  * status : VARCHAR2(20 CHAR)
+  * created_at : TIMESTAMP WITH TIME ZONE
+  * updated_at : TIMESTAMP WITH TIME ZONE
+}
+entity AUTH_SESSIONS {
+  * session_id : VARCHAR2(128 CHAR) <<PK>>
+  --
+  * session_data : CLOB (JSON)
+  * expires_at : TIMESTAMP WITH TIME ZONE
+}
+USERS ||--o{ TICKETS : client_id
+USERS |o--o{ TICKETS : assigned_to
+CATEGORIES ||--o{ TICKETS : category_id
+note bottom of AUTH_SESSIONS
+  Brak FK do USERS.
+  userId jest częścią JSON sesji.
+  Indeks: expires_at.
+end note
+note bottom of TICKETS
+  Gwiazdka przed polem = NOT NULL
+  Indeksy: category_id, client_id, assigned_to.
+  Status: NEW / IN_PROGRESS / CLOSED.
+  Dla obsługi przypisanie wymagane.
+  Role kont sprawdzane przez API.
+end note
+@enduml

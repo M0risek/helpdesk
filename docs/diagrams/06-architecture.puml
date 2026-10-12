@@ -1,0 +1,45 @@
+@startuml
+!pragma layout smetana
+top to bottom direction
+skinparam defaultFontName Segoe UI
+skinparam defaultFontSize 14
+skinparam shadowing false
+skinparam backgroundColor white
+skinparam componentStyle rectangle
+skinparam componentBackgroundColor #EFF5ED
+skinparam componentBorderColor #315642
+skinparam nodesep 35
+skinparam ranksep 35
+title HelpDesk — trzy warstwy, środowisko lokalne
+node "1. Prezentacja\nPrzeglądarka użytkownika" as Presentation {
+  component "React\nFormularze / listy / profil" as React
+}
+node "Serwer developerski\n127.0.0.1:5173" as Dev {
+  component "Vite\nPliki UI + proxy /api" as Vite
+}
+node "2. Logika\n127.0.0.1:3000" as Logic {
+  component "Express REST API\nSesja / CSRF / uprawnienia" as Express
+  component "Reguły zgłoszeń\nWalidacja i statusy" as Rules
+  component "Repozytorium + pula Oracle\nTransakcje / sesje" as Repository
+}
+node "3. Dane\nlocalhost:1521/FREEPDB1" as Data {
+  database "Oracle — schemat HELPDESK\nUSERS, CATEGORIES, TICKETS,\nAUTH_SESSIONS" as Oracle
+}
+component "SQL Developer\nAdministracja operatora" as SQLDev
+Presentation --> Dev : HTTP /api\nJSON + cookie + CSRF
+Dev --> Logic : Proxy /api
+Express --> Rules
+Rules --> Repository
+Express --> Repository : Konta / sesje / kategorie
+Logic --> Data : SQL z bindami\nCOMMIT / ROLLBACK
+SQLDev ..> Data : Skrypty i odczyt administracyjny
+note bottom of Presentation
+  Klient i pracownik korzystają z tego samego UI.
+  Przeglądarka nie otrzymuje hasła Oracle.
+end note
+note bottom of Logic
+  Node.js + sterownik oracledb Thin.
+  Konfiguracja backend/.env poza Git.
+  Docelowe HTTPS/hosting/CI/CD do wykonania.
+end note
+@enduml

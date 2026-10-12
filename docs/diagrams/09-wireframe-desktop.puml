@@ -1,0 +1,35 @@
+@startsalt
+skinparam defaultFontName Segoe UI
+skinparam defaultFontSize 16
+scale 1.5
+{+
+  <b>HelpDesk — panel klienta | Jan Kowalski · Klient | [ Wyloguj ]
+  ==
+  {
+    {+
+      <b>Menu
+      [ Pulpit ]
+      [ Zgłoszenia ]
+      [ Kategorie ]
+      [ Moje konto ]
+    } |
+    {
+      <b>Moje zgłoszenia | [ Nowe zgłoszenie ]
+      { Wyszukaj | "Tytuł lub kategoria         "
+        Status | ^Wszystkie^
+        Kategoria | ^Wszystkie^ }
+      [ Filtruj ] | [ Wyczyść filtry ]
+      {+
+        <b>Laptop nie startuje
+        { Laptop | Nowe | [ Szczegóły ] }
+      }
+      {+
+        <b>Problem z drukiem
+        { Drukarka | W trakcie | [ Szczegóły ] }
+      }
+      { [ Poprzednia ] | Strona 1 z 2 | [ Następna ] }
+      <i>Dane przykładowe — makieta
+    }
+  }
+}
+@endsalt

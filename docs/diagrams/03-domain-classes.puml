@@ -1,0 +1,52 @@
+@startuml
+!pragma layout smetana
+skinparam defaultFontName Segoe UI
+skinparam defaultFontSize 14
+skinparam shadowing false
+skinparam backgroundColor white
+skinparam classAttributeIconSize 0
+skinparam classBackgroundColor #EFF5ED
+skinparam classBorderColor #315642
+title HelpDesk — pojęciowy diagram klas
+class User {
+  id : Number
+  fullName : String
+  email : String
+  passwordHash : String
+  userRole : UserRole
+  createdAt : Timestamp
+}
+class Category {
+  id : Number
+  name : String
+  description : String [0..1]
+}
+class Ticket {
+  id : Number
+  title : String
+  description : String
+  status : TicketStatus
+  createdAt : Timestamp
+  updatedAt : Timestamp
+  /revision : String
+}
+enum UserRole {
+  CLIENT
+  STAFF
+}
+enum TicketStatus {
+  NEW
+  IN_PROGRESS
+  CLOSED
+}
+User "1" -- "0..*" Ticket : właściciel (clientId)
+User "0..1" -- "0..*" Ticket : prowadzący (assignedTo)
+Category "1" -- "0..*" Ticket : kategoria (categoryId)
+User ..> UserRole
+Ticket ..> TicketStatus
+note bottom of Ticket
+  /revision wyprowadzane z updatedAt.
+  Reguły realizują moduły backendu.
+  Diagram nie deklaruje klas JavaScript.
+end note
+@enduml
