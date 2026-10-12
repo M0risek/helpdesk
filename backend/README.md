@@ -1,6 +1,6 @@
 # Backend HelpDesk
 
-Backend udostępnia API w Express i korzysta z Oracle Database. Działają odczyt kategorii, rejestracja, logowanie, wylogowanie, profil użytkownika i kontrola ról klienta oraz pracownika. Interfejs React i operacje na zgłoszeniach pozostają kolejnymi etapami.
+Backend udostępnia API w Express i korzysta z Oracle Database. Działają odczyt kategorii, rejestracja, logowanie, wylogowanie, profil użytkownika i kontrola ról klienta oraz pracownika. Formularze i panele React są opisane w `frontend/README.md`; operacje na zgłoszeniach pozostają następnym etapem.
 
 ## Wymagania
 
@@ -142,11 +142,11 @@ Do commita dodaj kod, `package.json`, `package-lock.json`, `.env.example`, testy
 
 Przykładowy opis commita: `APP-02: Dodano rejestrację, logowanie i role użytkowników`.
 
-W Trello na karcie rejestracji i logowania zaznacz wykonane elementy backendu: zapis kont, haszowanie, sesje, wylogowanie, role i testy. Dołącz link do commita oraz wynik testów. Interfejs formularzy pozostaje do wykonania; kartę obejmującą również frontend pozostaw „W trakcie”. Zadanie obejmujące tylko backend można przenieść „Do sprawdzenia”.
+W Trello na karcie rejestracji i logowania zaznacz wykonane elementy backendu: zapis kont, haszowanie, sesje, wylogowanie, role i testy. Dołącz link do commita oraz wynik testów. Formularze React dodano w etapie APP-03; ich implementację można przenieść „Do sprawdzenia”, a kontrolę ręczną w przeglądarce pozostawić do wykonania.
 
 ## Przygotowanie do wdrożenia
 
-Lokalnie używamy HTTP i `NODE_ENV=development`. Na hostingu wymagane będą HTTPS, `NODE_ENV=production`, prywatne zmienne środowiskowe oraz dostępny serwer Oracle. Ustaw `TRUST_PROXY=1` tylko za jednym zaufanym proxy, które nadpisuje nagłówki przekazywane do aplikacji; bez proxy pozostaw `0`. Cookie sesji ma wtedy flagę `Secure`. Frontend i API powinny działać pod tym samym adresem; podczas pracy z Vite użyjemy proxy dla `/api`.
+Lokalnie używamy HTTP i `NODE_ENV=development`. Na hostingu wymagane będą HTTPS, `NODE_ENV=production`, prywatne zmienne środowiskowe oraz dostępny serwer Oracle. Ustaw `TRUST_PROXY=1` tylko za jednym zaufanym proxy, które nadpisuje nagłówki przekazywane do aplikacji; bez proxy pozostaw `0`. Cookie sesji ma wtedy flagę `Secure`. Frontend i API powinny działać pod tym samym adresem; podczas pracy z Vite korzystamy z proxy dla `/api`.
 
 Limit prób logowania/rejestracji (20 łącznie na IP w ciągu 15 minut) jest przechowywany w pamięci jednego procesu. Przy wielu instancjach lub wymaganiu zachowania limitu po restarcie trzeba użyć współdzielonego magazynu limitów. Sesje już teraz są współdzielone w Oracle.
 

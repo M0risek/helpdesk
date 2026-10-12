@@ -1,6 +1,6 @@
 # Rejestracja, logowanie i role HelpDesk
 
-Etap APP-02, stan na 2026-10-12. Dokument opisuje działający backend. Formularze React będą korzystać z tego API w kolejnym etapie.
+Etap APP-02, stan na 2026-10-12. Dokument opisuje działający backend. Formularze React korzystające z tego API dodano w APP-03; opisano je w `interface.md` i `frontend/README.md`.
 
 ## Wymagania i przypadki użycia
 
@@ -29,7 +29,7 @@ Przy frontendzie i API pod tym samym adresem przeglądarka obsługuje cookie. `f
 ```mermaid
 sequenceDiagram
     actor U as Użytkownik
-    participant F as Formularz React (planowany)
+    participant F as Formularz React
     participant A as API Express
     participant D as Oracle
     U->>F: Otwiera logowanie
@@ -102,7 +102,7 @@ Sesja zawiera `userId`, token CSRF i ustawienia cookie. Role są pobierane z `US
 
 `npm.cmd run test:oracle`: rzeczywisty zapis i odczyt kont oraz sesji w Oracle, poprawne logowanie, blokada klienta w panelu pracownika, współdzielenie sesji między dwoma serwerami oraz unieważnienie sesji po wylogowaniu. Skrypt usuwa własne dane testowe.
 
-Testy nie zastępują późniejszych testów formularzy React, obsługi zgłoszeń, wydajności ani konfiguracji docelowego hostingu. Pełna dokumentacja projektu będzie rozwijana wraz z tymi etapami.
+Testy backendu uzupełniono w APP-03 testami formularzy React oraz integracji przez Vite. Pozostają kontrola wizualna w przeglądarce, testy obsługi zgłoszeń, wydajności i konfiguracji docelowego hostingu. Pełna dokumentacja projektu będzie rozwijana wraz z tymi etapami.
 
 ## Źródła decyzji technicznych
 

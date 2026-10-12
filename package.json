@@ -1,0 +1,16 @@
+{
+  "name": "helpdesk",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Projekt akademicki HelpDesk — React, Express i Oracle",
+  "engines": {
+    "node": ">=24.10.0"
+  },
+  "scripts": {
+    "dev": "concurrently --kill-others --names API,WEB --prefix-colors green,cyan \"npm --prefix backend run dev\" \"npm --prefix frontend run dev\"",
+    "build": "npm --prefix frontend run build"
+  },
+  "devDependencies": {
+    "concurrently": "10.0.6"
+  }
+}
