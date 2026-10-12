@@ -22,7 +22,8 @@ try {
   const config = readConfig();
   database = await createDatabase(config.database);
   await database.verifySchema();
-  server = createApp(database).listen(config.port, config.host);
+  await database.verifyAuthSchema();
+  server = createApp(database, console, config.auth).listen(config.port, config.host);
   await once(server, 'listening');
   console.log(`HelpDesk API działa: http://localhost:${config.port}/api/health`);
   console.log(`Kategorie z Oracle: http://localhost:${config.port}/api/categories`);

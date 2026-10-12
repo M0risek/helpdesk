@@ -18,8 +18,9 @@ React, Vite, Bootstrap, Node.js, Express i Oracle Database. Do pracy z bazą uż
 ## Status
 Utworzono i sprawdzono schemat Oracle `HELPDESK`: trzy tabele, cztery początkowe kategorie, aktywne ograniczenia i poprawne indeksy.
 
-Przygotowano backend Express z konfiguracją połączenia z Oracle, kontrolą działania serwera i odczytem kategorii. Następne etapy to logowanie, uprawnienia, obsługa zgłoszeń i interfejs React.
+Backend Express obsługuje połączenie z Oracle, odczyt kategorii, rejestrację, logowanie, wylogowanie i uprawnienia klienta oraz pracownika. Sesje są przechowywane w dodatkowej tabeli `AUTH_SESSIONS`. Następne etapy to interfejs React i obsługa zgłoszeń.
 
 ## Uruchomienie i dokumentacja
 - [Baza danych i skrypty SQL](database/README.md)
 - [Backend: konfiguracja, uruchomienie i API](backend/README.md)
+- [Logowanie: wymagania, API, role i testy](docs/authentication.md)

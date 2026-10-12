@@ -6,6 +6,7 @@ const environment = {
   DB_USER: 'HELPDESK',
   DB_PASSWORD: ' test-password ',
   DB_CONNECT_STRING: 'localhost:1521/FREEPDB1',
+  SESSION_SECRET: 'test-secret-with-at-least-32-characters',
 };
 
 test('Konfiguracja zachowuje hasło bez zmieniania jego znaków', () => {
@@ -16,9 +17,17 @@ test('Konfiguracja zachowuje hasło bez zmieniania jego znaków', () => {
 });
 
 test('Brak wymaganych danych jest wykrywany przed próbą połączenia z Oracle', () => {
-  for (const name of ['DB_USER', 'DB_PASSWORD', 'DB_CONNECT_STRING']) {
+  for (const name of ['DB_USER', 'DB_PASSWORD', 'DB_CONNECT_STRING', 'SESSION_SECRET']) {
     assert.throws(() => readConfig({ ...environment, [name]: '' }), new RegExp(name));
   }
+});
+
+test('Klucz sesji, ciasteczka HTTPS i konfiguracja proxy są weryfikowane', () => {
+  assert.throws(() => readConfig({ ...environment, SESSION_SECRET: 'short' }), /SESSION_SECRET/);
+  assert.throws(() => readConfig({ ...environment, TRUST_PROXY: 'true' }), /TRUST_PROXY/);
+  assert.throws(() => readConfig({ ...environment, NODE_ENV: 'prod' }), /NODE_ENV/);
+  assert.equal(readConfig({ ...environment, NODE_ENV: 'production', TRUST_PROXY: '1' }).auth.secureCookies, true);
+  assert.equal(readConfig(environment).auth.secureCookies, false);
 });
 
 test('Nieprawidłowy port jest odrzucany', () => {

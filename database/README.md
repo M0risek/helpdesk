@@ -12,8 +12,9 @@ Konto ma uprawnienia `CREATE SESSION`, `CREATE TABLE`, `CREATE SEQUENCE` i limit
 2. Otwórz `01_schema.sql` albo skopiuj jego całą treść do arkusza. Naciśnij **F5**, aby uruchomić wszystkie instrukcje. Ten plik wykonaj raz w pustym schemacie: powinny powstać trzy tabele, trzy indeksy oraz komentarze.
 3. Jeśli pojawi się błąd `ORA-...`, sprawdź jego treść przed przejściem do następnego pliku. Ponowne wykonanie `01_schema.sql` po utworzeniu tabel zgłosi istniejące obiekty.
 4. W ten sam sposób wykonaj `02_seed_categories.sql`. Dodaje cztery początkowe kategorie i zatwierdza zapis przez `COMMIT`. Można go powtarzać: istniejące kategorie są pomijane.
-5. Wykonaj `03_verify.sql`. Sprawdź konto, obecność tabel, cztery początkowe kategorie, aktywne ograniczenia i poprawne indeksy. Jest to kontrola instalacji schematu; testy zachowania aplikacji powstaną w późniejszym etapie.
+5. Wykonaj `03_verify.sql`. Sprawdź konto, obecność trzech tabel domenowych, cztery początkowe kategorie, aktywne ograniczenia i poprawne indeksy. Testy zachowania API są opisane w `backend/README.md`.
 6. Rozwiń połączenie `HELPDESK` i odśwież węzeł **Tables**, aby zobaczyć utworzone tabele.
+7. Do logowania potrzebna jest dodatkowa tabela `AUTH_SESSIONS`. Zalecana instalacja: w terminalu folderu `backend` uruchom `npm.cmd run auth:setup`, a potem `npm.cmd run db:migrate`. Migracja korzysta z `04_auth_sessions.sql`, tworzy tylko tabelę sesji oraz jej indeks i może być powtarzana. Alternatywnie plik `04_auth_sessions.sql` można wykonać raz przez F5 jako `HELPDESK`.
 
 Skrypty mają wskazanego właściciela obiektów `HELPDESK`. Przygotowanie konta i hasła jest wykonywane lokalnie. Ewentualne prywatne pliki administracyjne można przechowywać w ignorowanym przez Git katalogu `database/local/`.
 
@@ -24,8 +25,9 @@ Skrypty mają wskazanego właściciela obiektów `HELPDESK`. Przygotowanie konta
 | `USERS` | Konta klientów i pracowników | `id`, `full_name`, `email`, `password_hash`, `user_role`, `created_at` |
 | `CATEGORIES` | Kategorie sprzętu | `id`, `name`, `description` |
 | `TICKETS` | Zgłoszenia klientów | `id`, `title`, `description`, `category_id`, `client_id`, `assigned_to`, `status`, `created_at`, `updated_at` |
+| `AUTH_SESSIONS` | Sesje logowania i tokeny CSRF | `session_id`, `session_data`, `expires_at` |
 
-Identyfikatory `id` są generowane przez Oracle. Przy dodawaniu wierszy pomijamy to pole.
+Identyfikatory `id` tabel domenowych są generowane przez Oracle. Przy dodawaniu wierszy pomijamy to pole. `AUTH_SESSIONS.session_id` jest losowym identyfikatorem generowanym przez backend, a `session_data` zawiera JSON sesji. Ta tabela nie przechowuje haseł.
 
 Relacje:
 
@@ -39,7 +41,8 @@ Relacje:
 - Statusy: `NEW` (nowe), `IN_PROGRESS` (w realizacji), `CLOSED` (zakończone).
 - Nowe zgłoszenie może być nieprzypisane. W realizacji i zakończone musi mieć przypisanego pracownika.
 - E-mail jest unikalny i przechowywany małymi literami, bez spacji na początku i końcu. Backend normalizuje go przed zapisem.
-- `password_hash` przechowuje wynik funkcji haszującej hasło użytkownika aplikacji. Konta aplikacji utworzy później backend z prawidłowymi skrótami haseł.
+- `password_hash` przechowuje wynik funkcji scrypt wraz z solą i parametrami. Backend tworzy klientów przez rejestrację; konto pracownika tworzymy lokalnie poleceniem `npm.cmd run staff:create`.
+- Sesje wygasają po godzinie braku aktywności. Wylogowanie usuwa konkretną sesję. Wygasłe rekordy są usuwane przy zapisie nowych sesji.
 - Klucze obce wymagają istniejącej kategorii, klienta i przypisanego użytkownika. Usuwanie powiązanych użytkowników lub kategorii wymaga rozwiązania zależności.
 - Backend dodatkowo sprawdzi role wskazanych użytkowników, uprawnienia do zgłoszenia i dozwolone zmiany statusu. Same klucze obce nie sprawdzają roli użytkownika.
 - `created_at` i `updated_at` otrzymują datę utworzenia. Przy każdej aktualizacji backend ustawi `updated_at = SYSTIMESTAMP`; w schemacie nie ma automatycznego wyzwalacza aktualizacji.
