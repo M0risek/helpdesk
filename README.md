@@ -6,7 +6,7 @@ Projekt aplikacji webowej do obsługi zgłoszeń w serwisie komputerowym.
 Umożliwienie klientom zgłaszania problemów oraz pracownikom
 zarządzania zgłoszeniami i aktualizowania ich statusu.
 
-## Planowane funkcje
+## Funkcje
 - Rejestracja i logowanie użytkowników.
 - Dodawanie, przeglądanie, edycja i usuwanie zgłoszeń.
 - Przypisywanie zgłoszeń pracownikom.
@@ -20,7 +20,9 @@ Utworzono i sprawdzono schemat Oracle `HELPDESK`: trzy tabele, cztery początkow
 
 Backend Express obsługuje połączenie z Oracle, odczyt kategorii, rejestrację, logowanie, wylogowanie i uprawnienia klienta oraz pracownika. Sesje są przechowywane w dodatkowej tabeli `AUTH_SESSIONS`.
 
-Frontend React zawiera formularze rejestracji i logowania, pulpity klienta i pracownika, wyszukiwanie kategorii wsparcia oraz widok konta. Dane pochodzą z API i Oracle; sesja jest odtwarzana po odświeżeniu strony. Następny etap to dodawanie i obsługa zgłoszeń.
+Frontend React zawiera formularze rejestracji i logowania, pulpity klienta i pracownika, wyszukiwanie kategorii wsparcia oraz widok konta. W APP-04 dodano tworzenie, listę, szczegóły, edycję i usuwanie własnych nowych zgłoszeń, a dla pracownika przypisanie i statusy. Lista ma filtry i paginację. Dane pochodzą z API i Oracle; sesja jest odtwarzana po odświeżeniu strony.
+
+Klient może zmieniać zgłoszenie do rozpoczęcia obsługi. Pracownik prowadzi je kolejno przez statusy „Nowe”, „W trakcie” i „Zamknięte”. Zapis sprawdza aktualną wersję zgłoszenia. Następne prace to ręczny odbiór aplikacji, dokumentacja projektu (wymagania, UML, plan zespołu) i przygotowanie wdrożenia.
 
 ## Uruchomienie na komputerze projektu
 
@@ -57,7 +59,7 @@ npm.cmd --prefix frontend run test:integration
 npm.cmd run build
 ```
 
-Frontend: 12 testów komponentów i komunikacji API. Backend: 22 testy uwierzytelniania i API. Test integracyjny uruchamia własne serwery na wolnych portach i sprawdza przepływ frontend → backend → Oracle; tworzy i usuwa wyłącznie własne konta oraz sesje testowe.
+Frontend: 20 testów komponentów i komunikacji API. Backend: 29 testów uwierzytelniania, reguł i API. Test integracyjny uruchamia własne serwery na wolnych portach i sprawdza przepływ frontend → backend → Oracle, w tym CRUD, uprawnienia, filtry i równoczesny zapis; tworzy i usuwa wyłącznie własne zgłoszenia, konta oraz sesje testowe.
 
 Testy komponentów korzystają z DOM w jsdom. Test integracyjny działa przez HTTP. W tej sesji nie było dostępnego narzędzia sterowania przeglądarką, dlatego wygląd na komputerze i telefonie wymaga jeszcze ręcznej kontroli w przeglądarce.
 
@@ -67,3 +69,4 @@ Testy komponentów korzystają z DOM w jsdom. Test integracyjny działa przez HT
 - [Logowanie: wymagania, API, role i testy](docs/authentication.md)
 - [Frontend: konfiguracja i testy](frontend/README.md)
 - [Interfejs: widoki, zachowanie i sprawdzenie ręczne](docs/interface.md)
+- [Zgłoszenia: wymagania, API, transakcje, testy i aktualizacja Trello](docs/tickets.md)

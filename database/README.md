@@ -44,8 +44,9 @@ Relacje:
 - `password_hash` przechowuje wynik funkcji scrypt wraz z solą i parametrami. Backend tworzy klientów przez rejestrację; konto pracownika tworzymy lokalnie poleceniem `npm.cmd run staff:create`.
 - Sesje wygasają po godzinie braku aktywności. Wylogowanie usuwa konkretną sesję. Wygasłe rekordy są usuwane przy zapisie nowych sesji.
 - Klucze obce wymagają istniejącej kategorii, klienta i przypisanego użytkownika. Usuwanie powiązanych użytkowników lub kategorii wymaga rozwiązania zależności.
-- Backend dodatkowo sprawdzi role wskazanych użytkowników, uprawnienia do zgłoszenia i dozwolone zmiany statusu. Same klucze obce nie sprawdzają roli użytkownika.
-- `created_at` i `updated_at` otrzymują datę utworzenia. Przy każdej aktualizacji backend ustawi `updated_at = SYSTIMESTAMP`; w schemacie nie ma automatycznego wyzwalacza aktualizacji.
+- Backend sprawdza role wskazanych użytkowników, właściciela zgłoszenia i dozwolone zmiany statusu. Klient edytuje/usuwa własne `NEW`; pracownik przypisuje i prowadzi `NEW` → `IN_PROGRESS` → `CLOSED`. Same klucze obce nie sprawdzają roli użytkownika.
+- `created_at` i `updated_at` otrzymują datę utworzenia. Przy aktualizacji backend ustawia bieżący czas Oracle lub poprzedni czas + 1 mikrosekunda, tak aby wersja zawsze wzrosła; w schemacie nie ma wyzwalacza aktualizacji.
+- `updated_at` jest wersją zgłoszenia. Zapis porównuje wersję przesłaną przez klienta po zablokowaniu rekordu w jednej transakcji. Nieaktualna wersja powoduje 409 i ROLLBACK. Szczegóły: [docs/tickets.md](../docs/tickets.md).
 
 ## Trello i GitHub
 

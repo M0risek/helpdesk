@@ -1,4 +1,4 @@
-# Interfejs HelpDesk — APP-03
+# Interfejs HelpDesk — APP-03 i APP-04
 
 Stan implementacji: 2026-10-12. Dokument uzupełnia wymagania i API opisane w `authentication.md`. Nie stanowi jeszcze pełnej dokumentacji końcowej projektu.
 
@@ -12,6 +12,7 @@ Interfejs używa ciemnej zieleni, jasnego tła i prostych kart. Na większym ekr
 | `src/api.js` | Żądania HTTP, cookie, token CSRF i interpretacja błędów |
 | `src/components/AuthForm.jsx` | Formularze, walidacja i komunikaty |
 | `src/components/Dashboard.jsx` | Pulpit, kategorie, profil i wylogowanie |
+| `src/components/Tickets.jsx` | Lista, filtry, formularz, szczegóły, potwierdzenie usunięcia i obsługa pracownika |
 | `src/components/Brand.jsx` / `Icon.jsx` | Wspólna identyfikacja i ikony SVG |
 | `src/styles.css` | Kolory, czytelność, responsywność i stany fokusowania |
 
@@ -29,6 +30,11 @@ Przepływ danych: komponent React → `api.js` → proxy `/api` w Vite → Expre
 | UI-06 | Użytkownik otwiera „Moje konto” | Widzi imię i nazwisko, e-mail oraz typ konta |
 | UI-07 | Użytkownik się wylogowuje | Backend usuwa sesję; interfejs wraca do logowania |
 | UI-08 | Sesja wygasa lub API jest niedostępne | Użytkownik dostaje właściwy komunikat i możliwość ponowienia lub logowania |
+| UI-09 | Klient tworzy/edytuje zgłoszenie | Formularz sprawdza dane; błąd zapisu zachowuje szkic |
+| UI-10 | Klient usuwa nowe zgłoszenie | Osobne potwierdzenie; anulowanie nie wywołuje API |
+| UI-11 | Pracownik obsługuje zgłoszenie | Przypisuje pracownika i zmienia status; zamknięcie pozostawia widok do odczytu |
+| UI-12 | Lista jest filtrowana i stronicowana | Parametry trafiają do API; zmiana filtrów wraca na stronę 1 |
+| UI-13 | Zgłoszenie zmieniła inna osoba | Komunikat o konflikcie; szkic pozostaje, użytkownik może pobrać aktualne dane |
 
 ## Dostępność
 
@@ -55,9 +61,12 @@ Uruchom `npm.cmd run dev` z folderu `helpdesk` i otwórz `http://127.0.0.1:5173/
 6. Utwórz własne konto pracownika przez `npm.cmd --prefix backend run staff:create`, zaloguj się nim i sprawdź liczniki.
 7. Sprawdź szerokości okna około 1440, 768 i 390 px. Treść nie powinna wymagać przewijania w poziomie; menu, formularze i wylogowanie muszą być dostępne.
 8. Przejdź przez formularz i menu klawiszem Tab. Sprawdź widoczny fokus i działanie klawisza Enter.
+9. Klient: dodaj zgłoszenie, popraw opis, dodaj drugie i usuń je. Anuluj raz potwierdzenie i sprawdź, że rekord pozostał.
+10. Pracownik: otwórz zgłoszenie, przypisz do siebie i rozpocznij obsługę, następnie zamknij. Klient powinien widzieć aktualny status i opis, bez przycisków edycji/usuwania.
+11. Sprawdź filtry statusu, kategorii i wyszukiwanie; pracownik także filtr przypisania. Otwórz zgłoszenie w dwóch kartach, zapisz w jednej i sprawdź komunikat o konflikcie w drugiej.
 
 Nie zaznaczaj tej kontroli jako wykonanej przed jej rzeczywistym przeprowadzeniem. Automatyczne testy komponentów i HTTP nie sprawdzają układu graficznego w przeglądarce.
 
 ## Następny etap
 
-Dodawanie zgłoszenia, lista własnych zgłoszeń klienta oraz zarządzanie zgłoszeniami przez pracownika. Wymagają nowych tras backendu i widoków React; obecny interfejs nie udostępnia nieaktywnych przycisków tych funkcji.
+Obsługa zgłoszeń została dodana w APP-04; API i reguły opisano w `tickets.md`. Następne prace: ręczny odbiór widoków, dokumentacja całego projektu i przygotowanie hostingu.

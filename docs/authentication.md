@@ -98,11 +98,11 @@ Sesja zawiera `userId`, token CSRF i ustawienia cookie. Role są pobierane z `US
 
 ## Sprawdzenie etapu
 
-`npm.cmd test`: 22 testy jednostkowe i HTTP, w tym haszowanie, role, CSRF, duplikaty, limit prób, wygasanie sesji, zmiana roli, format JSON i brak szczegółów błędów.
+`npm.cmd test`: 29 testów jednostkowych i HTTP: 22 dotyczą konfiguracji, haseł, sesji i dotychczasowego API, a 7 dodanych w APP-04 dotyczy reguł i tras zgłoszeń.
 
 `npm.cmd run test:oracle`: rzeczywisty zapis i odczyt kont oraz sesji w Oracle, poprawne logowanie, blokada klienta w panelu pracownika, współdzielenie sesji między dwoma serwerami oraz unieważnienie sesji po wylogowaniu. Skrypt usuwa własne dane testowe.
 
-Testy backendu uzupełniono w APP-03 testami formularzy React oraz integracji przez Vite. Pozostają kontrola wizualna w przeglądarce, testy obsługi zgłoszeń, wydajności i konfiguracji docelowego hostingu. Pełna dokumentacja projektu będzie rozwijana wraz z tymi etapami.
+Testy backendu uzupełniono testami React i integracji przez Vite. W APP-04 sprawdzono CRUD oraz obsługę zgłoszeń na rzeczywistej bazie; opis w `tickets.md`. Pozostają kontrola wizualna w przeglądarce, testy wydajności i konfiguracji docelowego hostingu. Pełna dokumentacja projektu będzie rozwijana wraz z tymi etapami.
 
 ## Źródła decyzji technicznych
 

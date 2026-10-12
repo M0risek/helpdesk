@@ -3,6 +3,24 @@ import { ApiError, createApi } from '../src/api.js';
 
 const response = (data, status = 200) => new Response(JSON.stringify(data), { status, headers: { 'Content-Type': 'application/json' } });
 
+test('API zgłoszeń koduje filtry i wysyła wersję oraz CSRF przy PATCH i DELETE', async () => {
+  const revision = '2026-10-12T10:00:00.123456Z';
+  const fetchRequest = vi.fn().mockResolvedValueOnce(response({ data: [], pagination: { total: 0 } }))
+    .mockResolvedValueOnce(response({ csrfToken: 'ticket-token' })).mockResolvedValueOnce(response({ data: { id: 7 } }))
+    .mockResolvedValueOnce(new Response(null, { status: 204 }));
+  const client = createApi(fetchRequest);
+  await client.tickets({ search: 'Laptop & drukarka', status: '', page: 1 });
+  const query = new URL(fetchRequest.mock.calls[0][0], 'http://example.test').searchParams;
+  expect(query.get('search')).toBe('Laptop & drukarka');
+  expect(query.has('status')).toBe(false);
+  await client.updateTicket(7, { assignedTo: 2, status: 'IN_PROGRESS', revision });
+  await client.deleteTicket(7, revision);
+  expect(fetchRequest.mock.calls[2][1].method).toBe('PATCH');
+  expect(fetchRequest.mock.calls[2][1].headers['X-CSRF-Token']).toBe('ticket-token');
+  expect(fetchRequest.mock.calls[3][1].method).toBe('DELETE');
+  expect(JSON.parse(fetchRequest.mock.calls[3][1].body)).toEqual({ revision });
+});
+
 test('Formularz przesyła cookie i token CSRF; po logowaniu używa nowego tokenu do wylogowania', async () => {
   const fetchRequest = vi.fn()
     .mockResolvedValueOnce(response({ csrfToken: 'initial-token' }))

@@ -1,4 +1,6 @@
 import oracledb from 'oracledb';
+import { createTicketRepository } from './ticket-repository.js';
+import { HttpError } from './errors.js';
 
 export async function createDatabase(config) {
   const pool = await oracledb.createPool({
@@ -27,6 +29,26 @@ export async function createDatabase(config) {
     return (await execute(sql, binds, options)).rows;
   }
 
+  async function transaction(action) {
+    const connection = await pool.getConnection();
+    connection.callTimeout = 5000;
+    const tx = {
+      execute: (sql, binds = {}, options = {}) => connection.execute(sql, binds, { outFormat: oracledb.OUT_FORMAT_OBJECT, ...options, autoCommit: false }),
+      query: async (sql, binds = {}, options = {}) => (await tx.execute(sql, binds, options)).rows,
+    };
+    try {
+      const result = await action(tx);
+      await connection.commit();
+      return result;
+    } catch (error) {
+      await connection.rollback();
+      if ([54, 30006].includes(error.errorNum)) throw new HttpError(409, 'TICKET_BUSY', 'Zgłoszenie jest właśnie zapisywane. Spróbuj ponownie za chwilę.');
+      throw error;
+    } finally {
+      await connection.close();
+    }
+  }
+
   function userFromRow(row, includeHash = false) {
     if (!row) return null;
     const user = { id: row.ID, fullName: row.FULL_NAME, email: row.EMAIL, role: row.USER_ROLE };
@@ -42,6 +64,7 @@ export async function createDatabase(config) {
 
   return {
     execute,
+    ...createTicketRepository({ query, transaction }),
     async checkConnection() {
       await query('SELECT 1 AS connection_test FROM dual');
     },

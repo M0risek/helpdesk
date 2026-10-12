@@ -41,7 +41,7 @@ export function App({ client = api }) {
   useEffect(() => {
     if (status !== 'ready') return;
     const titles = { '/login': 'Logowanie', '/register': 'Rejestracja', '/dashboard': 'Pulpit', '/categories': 'Kategorie wsparcia', '/account': 'Moje konto' };
-    document.title = `${titles[route] ?? 'Panel'} — HelpDesk`;
+    document.title = `${route.startsWith('/tickets') ? route === '/tickets/new' ? 'Nowe zgłoszenie' : 'Zgłoszenia' : titles[route] ?? 'Panel'} — HelpDesk`;
     document.getElementById('main-content')?.focus();
   }, [route, status]);
 

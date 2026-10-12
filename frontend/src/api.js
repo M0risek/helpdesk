@@ -39,11 +39,11 @@ export function createApi(fetchRequest = (...args) => fetch(...args)) {
     return pendingCsrf;
   }
 
-  async function post(path, body) {
+  async function post(path, body, method = 'POST') {
     const token = await getCsrf();
     try {
       return await request(path, {
-        method: 'POST',
+        method,
         headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': token },
         body: JSON.stringify(body ?? {}),
       });
@@ -60,6 +60,12 @@ export function createApi(fetchRequest = (...args) => fetch(...args)) {
     me: async () => (await request('/auth/me')).user,
     categories: async () => (await request('/categories')).data,
     summary: async () => (await request('/staff/summary')).data,
+    staffUsers: async () => (await request('/staff/users')).data,
+    tickets: (filters = {}) => request(`/tickets?${new URLSearchParams(Object.entries(filters).filter(([, value]) => value !== '' && value !== null && value !== undefined))}`),
+    ticket: async (id) => (await request(`/tickets/${id}`)).data,
+    createTicket: async (form) => (await post('/tickets', form)).data,
+    updateTicket: async (id, form) => (await post(`/tickets/${id}`, form, 'PATCH')).data,
+    deleteTicket: (id, revision) => post(`/tickets/${id}`, { revision }, 'DELETE'),
     register: async (form) => (await post('/auth/register', form)).user,
     async login(form) {
       const data = await post('/auth/login', form);

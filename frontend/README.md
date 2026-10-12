@@ -1,6 +1,6 @@
 # Frontend HelpDesk
 
-Etap APP-03: React, Vite i Bootstrap. Formularze oraz widoki korzystają z działającego backendu Express i Oracle. Interfejs nie zawiera przykładowych zgłoszeń ani zmyślonych liczników. Obsługa zgłoszeń będzie następnym etapem.
+Etapy APP-03 i APP-04: React, Vite i Bootstrap. Formularze oraz widoki korzystają z działającego backendu Express i Oracle. Interfejs obsługuje logowanie i zgłoszenia, w tym pracę klienta oraz pracownika. Dane i liczniki pochodzą z API.
 
 ## Uruchomienie
 
@@ -28,10 +28,15 @@ Jeśli zmienisz port API, skopiuj `.env.example` do lokalnego `frontend/.env`, u
 | `/#/dashboard` | Pulpit klienta lub pracownika, zależnie od roli |
 | `/#/categories` | Kategorie z Oracle i wyszukiwanie po nazwie lub opisie |
 | `/#/account` | Imię i nazwisko, e-mail oraz typ konta |
+| `/#/tickets` | Własne zgłoszenia klienta lub kolejka pracownika; filtry i paginacja |
+| `/#/tickets/new` | Formularz dodania zgłoszenia klienta |
+| `/#/tickets/:id` | Szczegóły, edycja/usunięcie nowego zgłoszenia klienta lub obsługa pracownika |
 
 Routing wykorzystuje fragment adresu (`#`), co pozwala odświeżać widoki bez dodatkowej konfiguracji przekierowań serwera. Zalogowany użytkownik adresu logowania trafia do pulpitu, a niezalogowany użytkownik chronionego widoku trafia do logowania.
 
 Pulpit pracownika pobiera rzeczywistą liczbę klientów i zgłoszeń z `/api/staff/summary`. Klient nie wywołuje tej trasy. Kontrola dostępu jest również wymuszana przez backend.
+
+Zgłoszenia obsługuje `src/components/Tickets.jsx`. Błąd zapisu pozostawia wpisaną treść w formularzu. Konflikt wersji udostępnia przycisk pobrania aktualnego zgłoszenia. Odświeżenie aktualnych danych po konflikcie zastępuje szkic danymi serwera. Powrót fokusu do okna sprawdza sesję, zachowując szkic zgłoszenia. Usunięcie wymaga osobnego potwierdzenia. Reguły i API są w [docs/tickets.md](../docs/tickets.md).
 
 ## Sesja i błędy
 
@@ -55,8 +60,8 @@ npm.cmd run build
 
 Sprawdzenie 2026-10-12:
 
-- 12 testów Vitest/Testing Library przeszło. Sprawdzają walidację, rejestrację, błędy logowania, role, odtworzenie sesji, wyszukiwanie, wylogowanie, awarie API i obsługę CSRF.
-- Test HTTP przez Vite, Express i rzeczywiste Oracle przeszedł. Sprawdził rejestrację, duplikat e-maila, logowanie, odtworzenie sesji, uprawnienia, liczniki pracownika i wylogowanie. Własne dane testowe usunięto.
+- 20 testów Vitest/Testing Library przeszło. Sprawdzają logowanie, sesję, role, walidację zgłoszeń, zapis, usuwanie z potwierdzeniem, filtry, obsługę pracownika, konflikty, awarie API i CSRF.
+- Test HTTP przez Vite, Express i rzeczywiste Oracle przeszedł. Sprawdził uwierzytelnianie oraz CRUD, izolację klientów, przypisanie, statusy, paginację, CLOB i dwa równoczesne zapisy. Własne dane testowe usunięto.
 - Build produkcyjny powstał w `frontend/dist`. Ten katalog jest ignorowany przez Git.
 - Test wizualny w prawdziwej przeglądarce nie został wykonany: narzędzie przeglądarki było niedostępne. Lista kontroli ręcznej jest w `docs/interface.md`.
 
@@ -72,11 +77,11 @@ Adres podglądu: `http://127.0.0.1:4173/`. API musi działać. Proxy używane pr
 
 ## GitHub i Trello
 
-Commit: `APP-03: Dodano interfejs React i formularze logowania`.
+Commit bieżącego etapu: `APP-04: Dodano zgłoszenia i obsługę serwisu`.
 
 Do repozytorium dodaj kod frontendu, testy, konfigurację, pliki `package.json` i `package-lock.json` z katalogu głównego i frontendu oraz dokumentację. `node_modules`, `dist` i prywatne `.env` pozostają ignorowane.
 
-W Trello uzupełnij zadania dotyczące interfejsu i formularzy. Implementacja może trafić „Do sprawdzenia”; test ręczny w przeglądarce pozostaje do wykonania. Do karty dodaj link do commita i wynik testów. Zadania obsługi zgłoszeń pozostają osobnym etapem.
+W Trello uzupełnij kartę obsługi zgłoszeń i przenieś ją „Do sprawdzenia”. Dołącz link do commita i wynik testów; kontrola ręczna w przeglądarce pozostaje do wykonania. Gotowa checklista i komentarz są w [docs/tickets.md](../docs/tickets.md).
 
 ## Źródła
 

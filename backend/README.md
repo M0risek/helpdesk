@@ -1,6 +1,6 @@
 # Backend HelpDesk
 
-Backend udostępnia API w Express i korzysta z Oracle Database. Działają odczyt kategorii, rejestracja, logowanie, wylogowanie, profil użytkownika i kontrola ról klienta oraz pracownika. Formularze i panele React są opisane w `frontend/README.md`; operacje na zgłoszeniach pozostają następnym etapem.
+Backend udostępnia API w Express i korzysta z Oracle Database. Działają kategorie, uwierzytelnianie, sesje oraz CRUD zgłoszeń klienta i obsługa pracownika. Formularze React opisano w `frontend/README.md`; reguły, API, transakcje i testy zgłoszeń w [docs/tickets.md](../docs/tickets.md).
 
 ## Wymagania
 
@@ -82,6 +82,12 @@ Terminal pozostaje otwarty podczas działania serwera. Zmiana plików JavaScript
 | `GET /api/auth/me` | Profil zalogowanego użytkownika |
 | `POST /api/auth/logout` | Wylogowanie i usunięcie sesji z Oracle |
 | `GET /api/staff/summary` | Liczba klientów i zgłoszeń; dostęp tylko dla pracownika |
+| `GET /api/staff/users` | Pracownicy do przypisania zgłoszenia; dostęp tylko dla pracownika |
+| `GET /api/tickets` | Lista z filtrami i paginacją; klient widzi własne zgłoszenia |
+| `GET /api/tickets/:id` | Szczegóły dostępnego zgłoszenia |
+| `POST /api/tickets` | Utworzenie zgłoszenia klienta |
+| `PATCH /api/tickets/:id` | Edycja klienta lub przypisanie/status pracownika; wymagana aktualna wersja |
+| `DELETE /api/tickets/:id` | Usunięcie własnego nowego zgłoszenia; wymagana aktualna wersja |
 
 Otwórz w przeglądarce `http://localhost:3000/api/categories`. Powinien pojawić się JSON z czterema kategoriami. Identyfikatory pochodzą z Oracle; ich kolejność nie ma znaczenia.
 
@@ -117,7 +123,8 @@ Test uruchamia dwa tymczasowe serwery na wolnych portach, tworzy dwa losowe kont
 
 Sprawdzenie wykonane 2026-10-12:
 
-- 22 testy konfiguracji, haseł, sesji i API: wszystkie przeszły.
+- 29 testów konfiguracji, haseł, sesji, reguł zgłoszeń i API: wszystkie przeszły.
+- Test `npm.cmd --prefix frontend run test:integration` z folderu `helpdesk` sprawdził także CRUD i obsługę zgłoszeń w Oracle przez proxy Vite. Równoczesne zapisy tej samej wersji zwróciły 200 i 409. Własne dane testowe usunięto.
 - `db:check` połączył się z lokalnym Oracle, odnalazł trzy tabele i odczytał cztery kategorie.
 - `test:oracle` sprawdził rejestrację, duplikat e-maila, CSRF, odrzucenie nadania roli, logowanie, dostęp klienta i pracownika, odczyt sesji przez drugi serwer, wylogowanie oraz wygaśnięcie. Dane testowe usunięto.
 - Migracja utworzyła tabelę sesji i indeks; powtórzenie migracji pominęło istniejące obiekty.
@@ -140,9 +147,11 @@ Sprawdzenie wykonane 2026-10-12:
 
 Do commita dodaj kod, `package.json`, `package-lock.json`, `.env.example`, testy i dokumentację. Pliki `.env` i `node_modules` są ignorowane.
 
-Przykładowy opis commita: `APP-02: Dodano rejestrację, logowanie i role użytkowników`.
+Opis commita bieżącego etapu: `APP-04: Dodano zgłoszenia i obsługę serwisu`.
 
 W Trello na karcie rejestracji i logowania zaznacz wykonane elementy backendu: zapis kont, haszowanie, sesje, wylogowanie, role i testy. Dołącz link do commita oraz wynik testów. Formularze React dodano w etapie APP-03; ich implementację można przenieść „Do sprawdzenia”, a kontrolę ręczną w przeglądarce pozostawić do wykonania.
+
+Obsługa zgłoszeń to APP-04. Checklistę tego zadania i komentarz do Trello przygotowano w [docs/tickets.md](../docs/tickets.md).
 
 ## Przygotowanie do wdrożenia
 
